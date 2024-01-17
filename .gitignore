@@ -49,3 +49,27 @@ Session.vim
 
 # Visual Studio
 .vs
+
+# Compiled Object files
+*.slo
+*.sln
+*.lo
+*.o
+*.obj
+*.gch
+*.pch
+*.so
+*.dylib
+*.dll
+*.mod
+*.lai
+*.la
+*.a
+*.lib
+*.exe
+*.out
+*.app
+*.log
+*.pdb
+Intermediate/*
+Saved/*
