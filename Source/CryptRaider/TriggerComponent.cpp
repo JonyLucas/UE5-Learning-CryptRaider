@@ -20,15 +20,41 @@ void UTriggerComponent::BeginPlay()
 	Super::BeginPlay();
 
 	// ...
-	
 }
 
 
+AActor* UTriggerComponent::GetOverlappingActors() const
+{
+	TArray<AActor*> OverlappingActors;
+	UPrimitiveComponent::GetOverlappingActors(OverlappingActors);
+
+	// if(OverlappingActors.Num() > 0)
+	// {
+	// 	UE_LOG(LogTemp, Display, TEXT("Overlapping Actor: %s"), *OverlappingActors[0]->GetName());
+	// }
+
+	// for(int i = 0; i < OverlappingActors.Num(); i++)
+	// {
+	// 	UE_LOG(LogTemp, Display, TEXT("Overlapping Actor: %s"), *OverlappingActors[i]->GetName());
+	// }
+
+	for (AActor* Actor : OverlappingActors)
+	{
+		if (Actor->ActorHasTag(OverlapTag))
+		{
+			UE_LOG(LogTemp, Display, TEXT("Overlapping Actor: %s"), *Actor->GetName());
+			return Actor;
+		}
+	}
+
+	return nullptr;
+}
+
 // Called every frame
-void UTriggerComponent::TickComponent(float DeltaTime, ELevelTick TickType, FActorComponentTickFunction* ThisTickFunction)
+void UTriggerComponent::TickComponent(float DeltaTime, ELevelTick TickType,
+                                      FActorComponentTickFunction* ThisTickFunction)
 {
 	Super::TickComponent(DeltaTime, TickType, ThisTickFunction);
 
-	// ...
+	GetOverlappingActors();
 }
-
