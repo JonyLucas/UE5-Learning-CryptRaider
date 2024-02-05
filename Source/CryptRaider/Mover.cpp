@@ -49,3 +49,8 @@ void UMover::TickComponent(float DeltaTime, ELevelTick TickType, FActorComponent
 		Move(DeltaTime);
 	}
 }
+
+void UMover::SetShouldMove(bool ShouldMoveToSet)
+{
+	ShouldMove = ShouldMoveToSet;
+}

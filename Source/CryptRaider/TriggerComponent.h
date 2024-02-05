@@ -3,6 +3,7 @@
 #pragma once
 
 #include "CoreMinimal.h"
+#include "Mover.h"
 #include "Components/ActorComponent.h"
 #include "Components/BoxComponent.h"
 #include "TriggerComponent.generated.h"
@@ -25,9 +26,12 @@ protected:
 public:	
 	// Called every frame
 	virtual void TickComponent(float DeltaTime, ELevelTick TickType, FActorComponentTickFunction* ThisTickFunction) override;
+	UFUNCTION(BlueprintCallable)
+	void SetMover(UMover* MoverToSet);
 
 private:
 	UPROPERTY(EditAnywhere)
 	FName OverlapTag = "Unlock";
+	UMover* Mover;
 		
 };

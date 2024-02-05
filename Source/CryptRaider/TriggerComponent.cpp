@@ -55,6 +55,18 @@ void UTriggerComponent::TickComponent(float DeltaTime, ELevelTick TickType,
                                       FActorComponentTickFunction* ThisTickFunction)
 {
 	Super::TickComponent(DeltaTime, TickType, ThisTickFunction);
+	AActor* OverlapActor = GetOverlappingActors();
+	if (OverlapActor != nullptr)
+	{
+		Mover->SetShouldMove(true);
+	}
+	else
+	{
+		Mover->SetShouldMove(false);
+	}
+}
 
-	GetOverlappingActors();
+void UTriggerComponent::SetMover(UMover* MoverToSet)
+{
+	Mover = MoverToSet;
 }
