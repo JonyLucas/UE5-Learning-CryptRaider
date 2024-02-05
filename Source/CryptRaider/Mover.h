@@ -24,7 +24,8 @@ protected:
 public:	
 	// Called every frame
 	virtual void TickComponent(float DeltaTime, ELevelTick TickType, FActorComponentTickFunction* ThisTickFunction) override;
-	void SetShouldMove(bool ShouldMoveToSet);
+	void SetShouldMove(bool ShouldMoveToSet, bool IsReverse = false);
+	bool IsReversed() const;
 
 private:
 	UPROPERTY(EditAnywhere)
@@ -36,7 +37,8 @@ private:
 	UPROPERTY(EditAnywhere)
 	bool ShouldMove = false;
 
-	FVector OriginalLocation;
-	FVector TargetLocation;
+	FVector InitialActorLocation;
+	FVector OriginalTargetLocation;
+	FVector CurrentTargetLocation;
 	float Speed;
 };

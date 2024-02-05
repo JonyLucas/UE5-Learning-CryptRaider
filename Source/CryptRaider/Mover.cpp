@@ -23,20 +23,28 @@ void UMover::BeginPlay()
 	UE_LOG(LogTemp, Warning, TEXT("Mover reporting for duty!"));
 	AActor* Pointer = GetOwner();
 
-	OriginalLocation = Pointer->GetActorLocation();
-	TargetLocation = OriginalLocation + MoveOffset;
+	InitialActorLocation = Pointer->GetActorLocation();
+	OriginalTargetLocation = InitialActorLocation + MoveOffset;
+	CurrentTargetLocation = OriginalTargetLocation;
 	Speed = MoveOffset.Size() / MoveDuration;
 
 	UE_LOG(LogTemp, Display, TEXT("Owner is %s: with address %p and position %s"), *Pointer->GetActorNameOrLabel(),
-	       Pointer, *OriginalLocation.ToCompactString());
+	       Pointer, *InitialActorLocation.ToCompactString());
 }
 
 
 void UMover::Move(float DeltaTime)
 {
 	AActor* Owner = GetOwner();
-	FVector CurrentLocation = Owner->GetActorLocation();
-	FVector NewLocation = FMath::VInterpConstantTo(CurrentLocation, TargetLocation, DeltaTime, Speed);
+	const FVector CurrentLocation = Owner->GetActorLocation();
+
+	FVector NewLocation = FMath::VInterpConstantTo(CurrentLocation, CurrentTargetLocation, DeltaTime, Speed);
+	if ((NewLocation - CurrentTargetLocation).Size() < 0.1f)
+	{
+		NewLocation = CurrentTargetLocation;
+		ShouldMove = false;
+	}
+
 	Owner->SetActorLocation(NewLocation);
 }
 
@@ -50,7 +58,13 @@ void UMover::TickComponent(float DeltaTime, ELevelTick TickType, FActorComponent
 	}
 }
 
-void UMover::SetShouldMove(bool ShouldMoveToSet)
+void UMover::SetShouldMove(bool ShouldMoveToSet, bool IsReverse)
 {
 	ShouldMove = ShouldMoveToSet;
+	CurrentTargetLocation = IsReverse ? InitialActorLocation : OriginalTargetLocation;
+}
+
+bool UMover::IsReversed() const
+{
+	return CurrentTargetLocation == InitialActorLocation;
 }

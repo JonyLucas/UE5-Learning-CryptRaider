@@ -22,16 +22,26 @@ protected:
 	// Called when the game starts
 	virtual void BeginPlay() override;
 	AActor* GetOverlappingActors() const;
+	void AttachGrabbedItem();
 
 public:	
 	// Called every frame
 	virtual void TickComponent(float DeltaTime, ELevelTick TickType, FActorComponentTickFunction* ThisTickFunction) override;
+
 	UFUNCTION(BlueprintCallable)
 	void SetMover(UMover* MoverToSet);
+
+	UFUNCTION(BlueprintCallable)
+	void ReverseMover();
 
 private:
 	UPROPERTY(EditAnywhere)
 	FName OverlapTag = "Unlock";
-	UMover* Mover;
+
+	UPROPERTY(EditAnywhere)
+	bool ShouldDisablePhysics = true;
+	
+	UMover* Mover = nullptr;
+	AActor* AttachedActor = nullptr;
 		
 };

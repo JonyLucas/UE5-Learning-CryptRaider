@@ -42,7 +42,7 @@ AActor* UTriggerComponent::GetOverlappingActors() const
 	{
 		if (Actor->ActorHasTag(OverlapTag))
 		{
-			UE_LOG(LogTemp, Display, TEXT("Overlapping Actor: %s"), *Actor->GetName());
+			// UE_LOG(LogTemp, Display, TEXT("Overlapping Actor: %s"), *Actor->GetName());
 			return Actor;
 		}
 	}
@@ -50,23 +50,53 @@ AActor* UTriggerComponent::GetOverlappingActors() const
 	return nullptr;
 }
 
+void UTriggerComponent::AttachGrabbedItem()
+{
+	AActor* OverlapActor = GetOverlappingActors();
+
+	if (!Mover)
+	{
+		return;
+	}
+
+	if (OverlapActor && !AttachedActor)
+	{
+		if (!OverlapActor->ActorHasTag("Grabbed") && !OverlapActor->IsAttachedTo(GetOwner()))
+		{
+			AttachedActor = OverlapActor;
+			UPrimitiveComponent* PrimitiveComponent = Cast<UPrimitiveComponent>(OverlapActor->GetRootComponent());
+			if (PrimitiveComponent && ShouldDisablePhysics)
+			{
+				PrimitiveComponent->SetSimulatePhysics(false);
+			}
+			OverlapActor->AttachToActor(GetOwner(), FAttachmentTransformRules::KeepWorldTransform);
+			Mover->SetShouldMove(true, false);
+		}
+	}
+
+	if(AttachedActor && AttachedActor->ActorHasTag("Grabbed"))
+	{
+		AttachedActor->DetachFromActor(FDetachmentTransformRules::KeepWorldTransform);
+		AttachedActor = nullptr;
+		ReverseMover();
+	}
+}
+
 // Called every frame
 void UTriggerComponent::TickComponent(float DeltaTime, ELevelTick TickType,
                                       FActorComponentTickFunction* ThisTickFunction)
 {
 	Super::TickComponent(DeltaTime, TickType, ThisTickFunction);
-	AActor* OverlapActor = GetOverlappingActors();
-	if (OverlapActor != nullptr)
-	{
-		Mover->SetShouldMove(true);
-	}
-	else
-	{
-		Mover->SetShouldMove(false);
-	}
+	AttachGrabbedItem();
 }
 
 void UTriggerComponent::SetMover(UMover* MoverToSet)
 {
 	Mover = MoverToSet;
+}
+
+void UTriggerComponent::ReverseMover()
+{
+	UE_LOG(LogTemp, Display, TEXT("ReverseMover"));
+	Mover->SetShouldMove(true, true);
 }
