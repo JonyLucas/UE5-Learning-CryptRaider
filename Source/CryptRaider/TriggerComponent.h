@@ -31,15 +31,9 @@ public:
 	UFUNCTION(BlueprintCallable)
 	void SetMover(UMover* MoverToSet);
 
-	UFUNCTION(BlueprintCallable)
-	void ReverseMover();
-
 private:
 	UPROPERTY(EditAnywhere)
 	FName OverlapTag = "Unlock";
-
-	UPROPERTY(EditAnywhere)
-	bool ShouldDisablePhysics = true;
 	
 	UMover* Mover = nullptr;
 	AActor* AttachedActor = nullptr;

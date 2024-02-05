@@ -98,7 +98,11 @@ void UGrabber::Grab()
 			GetComponentRotation()
 		);
 
-		HitResult.GetActor()->Tags.Add("Grabbed");
+		AActor* HitActor = HitResult.GetActor();
+		HitActor->Tags.Add("Grabbed");
+		HitActor->DetachFromActor(FDetachmentTransformRules::KeepWorldTransform);
+		HitResult.GetComponent()->SetSimulatePhysics(true);
+		
 		// DebugTrace(HitResult);
 	}
 	else

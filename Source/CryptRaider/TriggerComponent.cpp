@@ -65,7 +65,7 @@ void UTriggerComponent::AttachGrabbedItem()
 		{
 			AttachedActor = OverlapActor;
 			UPrimitiveComponent* PrimitiveComponent = Cast<UPrimitiveComponent>(OverlapActor->GetRootComponent());
-			if (PrimitiveComponent && ShouldDisablePhysics)
+			if (PrimitiveComponent)
 			{
 				PrimitiveComponent->SetSimulatePhysics(false);
 			}
@@ -78,7 +78,7 @@ void UTriggerComponent::AttachGrabbedItem()
 	{
 		AttachedActor->DetachFromActor(FDetachmentTransformRules::KeepWorldTransform);
 		AttachedActor = nullptr;
-		ReverseMover();
+		Mover->SetShouldMove(true, true);
 	}
 }
 
@@ -93,10 +93,4 @@ void UTriggerComponent::TickComponent(float DeltaTime, ELevelTick TickType,
 void UTriggerComponent::SetMover(UMover* MoverToSet)
 {
 	Mover = MoverToSet;
-}
-
-void UTriggerComponent::ReverseMover()
-{
-	UE_LOG(LogTemp, Display, TEXT("ReverseMover"));
-	Mover->SetShouldMove(true, true);
 }
